@@ -8,7 +8,7 @@ export default function IdeaForm() {
   const handleSubmit = (e) => {
     e.preventDefault();
     if (!idea.trim()) return;
-    router.push(`/result?idea=${encodeURIComponent(idea.trim())}`);
+    router.push(`/names?idea=${encodeURIComponent(idea.trim())}`);
   };
 
   return (
