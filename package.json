@@ -4,7 +4,8 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "start": "next start"
+    "start": "next start",
+    "vercel-build": "[my-framework] build --output public"
   },
   "dependencies": {
     "next": "latest",
@@ -15,8 +16,5 @@
     "autoprefixer": "^10.4.17",
     "postcss": "^8.4.27",
     "tailwindcss": "^3.3.5"
-  }
-  "scripts": {
-    "build": "[my-framework] build --output public"
   }
 }
