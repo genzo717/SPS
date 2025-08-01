@@ -6,14 +6,16 @@ export default function Names() {
   const { idea } = router.query;
   const [names, setNames] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [attempt, setAttempt] = useState(0);
+  const [context, setContext] = useState('');
 
-  const fetchNames = async () => {
+  const fetchNames = async (ctx = '') => {
     if (!idea) return;
     setLoading(true);
     try {
-      const res = await fetch(`/api/generateName?idea=${encodeURIComponent(idea)}`);
-      const data = await res.json();
-      setNames(data.names || []);
+      const params = new URLSearchParams({ idea });
+      if (ctx) params.append('context', ctx);
+      const res = await fetch(`/api/generateName?${params.toString()}`);
     } catch (err) {
       console.error(err);
     } finally {
@@ -22,11 +24,20 @@ export default function Names() {
   };
 
   useEffect(() => {
-    fetchNames();
+    if (idea) {
+      setAttempt(1);
+      fetchNames();
+    }
   }, [idea]);
 
   const handleSelect = (name) => {
     router.push(`/result?idea=${encodeURIComponent(idea)}&name=${encodeURIComponent(name)}`);
+  };
+
+ const handleRegenerate = () => {
+    const nextAttempt = attempt + 1;
+    setAttempt(nextAttempt);
+    fetchNames(nextAttempt >= 3 ? context : '');
   };
 
   return (
@@ -38,13 +49,25 @@ export default function Names() {
           <li key={n}>
             <button
               onClick={() => handleSelect(n)}
-              className="bg-[#f5f542] text-black px-4 py-2 rounded-sm font-bold">
+              className="bg-[#f5f542] text-black px-4 py-2 rounded-sm font-bold"
+          >
               {n}
             </button>
           </li>
         ))}
       </ul>
-      <button onClick={fetchNames} className="underline">Regenerate Names</button>
+      {attempt >= 3 && (
+        <input
+          type="text"
+          value={context}
+          onChange={(e) => setContext(e.target.value)}
+          placeholder="Add more context..."
+          className="px-4 py-2 text-black rounded-sm w-full max-w-xs"
+        />
+      )}
+      <button onClick={handleRegenerate} className="underline">
+        {attempt >= 3 ? 'Generate More Names' : 'Regenerate Names'}
+      </button>
     </main>
   );
 }
