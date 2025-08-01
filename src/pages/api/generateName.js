@@ -1,1 +1,3 @@
-// API para generar nombres con OpenAI
+export default function handler(req, res) {
+  res.status(200).json({ names: ["exampleName"] });
+}
