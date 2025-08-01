@@ -1,1 +1,3 @@
-// API para validar disponibilidad de dominio
+export default function handler(req, res) {
+  res.status(200).json({ available: true });
+}
